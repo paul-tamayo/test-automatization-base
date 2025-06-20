@@ -77,7 +77,7 @@ Feature: Prueba de automatización de endpoints con Karate Framework
     Then status 404
     And match response == {"error": "Character not found"}
 
-  Scenario: Verificar error 500 al intentar crear un personaje con un ID ya existente
+  Scenario: Enviando a generar un error 500 para verificar el manejo de errores
     Given path '/api/characters', 999999999999999999999999999999999
     When method GET
     Then status 500
