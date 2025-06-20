@@ -22,7 +22,7 @@ Feature: Prueba de automatización de endpoints con Karate Framework
     And match each response == character
 
   Scenario: Verificar el ciclo de vida de un personaje
-    # Creación del persona de Superman
+    # Creación del personaje de Superman
     Given path '/api/characters'
     And request {name : "Superman", alterego: "Clark Kent", description: "Hijo de cripton", powers: ["Fuerza", "Volar"]}
     When method POST
@@ -54,3 +54,23 @@ Feature: Prueba de automatización de endpoints con Karate Framework
     Given path '/api/characters', characterId
     When method DELETE
     Then status 204
+
+    Scenario: Verificar que el personaje del Chapulin Colorado una vez eliminado ya no exista
+      # Creación del personaje del Chapulin Colorado
+      Given path '/api/characters'
+      And request {name : "Chapulin Colorado", alterego: "Chespirito", description: "Superheroe mexicano", powers: ["Fuerza", "Chipote Chillón"]}
+      When method POST
+      Then status 201
+      * def characterId = response.id
+
+      # Eliminar el personaje del Chapulin Colorado
+      Given path '/api/characters', characterId
+      When method DELETE
+      Then status 204
+
+      # Eliminar el personaje del Chapulin Colorado nuevamente para verificar que no existe
+      Given path '/api/characters', characterId
+      When method DELETE
+      Then status 404
+
+      
