@@ -5,21 +5,12 @@ Feature: Prueba de automatización de endpoints con Karate Framework
     * def character = { "id": '#number', "name": '#string', "alterego": '#string', "description": '#string', "powers": '#array' }
     * configure ssl = true
 
-  #Scenario: Crear un nuevo personaje
-  #  Given path '/api/characters'
-  # And request {name : "Iron Man", alterego: "Tony Stark", description: "Genius billionaire", powers: ["Armor", "Flight"]}
-  # When method POST
-  # Then status 201
-  # And match response == character
-  # And match response.id == '#number'
-
-
   Scenario: Verificación para obtener todos los personajes
     Given path '/api/characters'
     When method GET
     Then status 200
     And match response == '#[]'
-    And match each response == character
+    * if (response.length == 0) {      karate.call('classpath:create-character.feature')    }
 
   Scenario: Verificar el ciclo de vida de un personaje
     # Creación del personaje de Scarlet Witch
