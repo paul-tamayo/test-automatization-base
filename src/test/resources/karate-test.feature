@@ -74,8 +74,20 @@ Feature: Prueba de automatización de endpoints con Karate Framework
     Then status 404
 
   Scenario: Verificar que el personaje de Ant-Man no se crea por campos faltantes
-    # Creación del personaje de Ant-Man con datos faltantes
     Given path '/api/characters'
     And request {name : "Ant-Man", alterego: "Scott Lang"}
     When method POST
     Then status 400
+    And match response == {"powers": "Powers are required","description": "Description is required"}
+
+  Scenario: Obtener un personaje que no existe
+    Given path '/api/characters', 999999999
+    When method GET
+    Then status 404
+    And match response == {"error": "Character not found"}
+
+  Scenario: Verificar error 500 al intentar crear un personaje con un ID ya existente
+    Given path '/api/characters', 999999999999999999999999999999999
+    When method GET
+    Then status 500
+    And match response == {"error": "Internal server error"}
