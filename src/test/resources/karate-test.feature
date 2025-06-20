@@ -91,3 +91,10 @@ Feature: Prueba de automatización de endpoints con Karate Framework
     When method GET
     Then status 500
     And match response == {"error": "Internal server error"}
+
+  Scenario: Actualizar un personaje que no existe
+    Given path '/api/characters/999999999'
+    And request {name : "Scarlet Witch", alterego: "Wanda Maximoff", description: "Habilidades mágicas", powers: ["Fuerza", "Alteración de la realidad", "Visión de rayos X"]}
+    When method PUT
+    Then status 404
+    And match response == {"error": "Character not found"}
