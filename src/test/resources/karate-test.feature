@@ -22,55 +22,60 @@ Feature: Prueba de automatización de endpoints con Karate Framework
     And match each response == character
 
   Scenario: Verificar el ciclo de vida de un personaje
-    # Creación del personaje de Superman
+    # Creación del personaje de Scarlet Witch
     Given path '/api/characters'
-    And request {name : "Superman", alterego: "Clark Kent", description: "Hijo de cripton", powers: ["Fuerza", "Volar"]}
+    And request {name : "Scarlet Witch", alterego: "Wanda Maximoff", description: "Poderosa mutante con habilidades mágicas y de alteración de la realidad.", powers: ["Fuerza", "Alteración de la realidad"]}
     When method POST
     Then status 201
     And match response == character
     * def characterId = response.id
 
-    # Obtener el personaje de Superman creado
+    # Obtener el personaje de Scarlet Witch creado
     Given path '/api/characters', characterId
     When method GET
     Then status 200
     And match response == character
     And match response.id == characterId
-    And match response.name == "Superman"
-    And match response.alterego == "Clark Kent"
-    And match response.description == "Hijo de cripton"
-    And match response.powers == ["Fuerza", "Volar"]
+    And match response.name == "Scarlet Witch"
+    And match response.alterego == "Wanda Maximoff"
+    And match response.description == "Poderosa mutante con habilidades mágicas y de alteración de la realidad."
+    And match response.powers == ["Fuerza", "Alteración de la realidad"]
 
-    # Actualizar el personaje de Superman
+    # Actualizar el personaje de Scarlet Witch
     Given path '/api/characters', characterId
-    And request {name : "Superman", alterego: "Clark Kent", description: "Hijo de cripton", powers: ["Fuerza", "Volar", "Visión de rayos X"]}
+    And request {name : "Scarlet Witch", alterego: "Wanda Maximoff", description: "Habilidades mágicas", powers: ["Fuerza", "Alteración de la realidad", "Visión de rayos X"]}
     When method PUT
     Then status 200
     And match response == character
     And match response.id == characterId
-    And match response.powers == ["Fuerza", "Volar", "Visión de rayos X"]
+    And match response.powers == ["Fuerza", "Alteración de la realidad", "Visión de rayos X"]
 
-    # Eliminar el personaje de Superman
+    # Eliminar el personaje de Scarlet Witch
     Given path '/api/characters', characterId
     When method DELETE
     Then status 204
 
-    Scenario: Verificar que el personaje del Chapulin Colorado una vez eliminado ya no exista
-      # Creación del personaje del Chapulin Colorado
-      Given path '/api/characters'
-      And request {name : "Chapulin Colorado", alterego: "Chespirito", description: "Superheroe mexicano", powers: ["Fuerza", "Chipote Chillón"]}
-      When method POST
-      Then status 201
-      * def characterId = response.id
+  Scenario: Verificar que el personaje del Captain America una vez eliminado ya no exista
+    # Creación del personaje del Captain America
+    Given path '/api/characters'
+    And request {name : "Captain America ", alterego: "Steve Rogers", description: "Súper soldado con escudo indestructible.", powers: ["Fuerza", "Chipote Chillón"]}
+    When method POST
+    Then status 201
+    * def characterId = response.id
 
-      # Eliminar el personaje del Chapulin Colorado
-      Given path '/api/characters', characterId
-      When method DELETE
-      Then status 204
+    # Eliminar el personaje del Captain America
+    Given path '/api/characters', characterId
+    When method DELETE
+    Then status 204
 
-      # Eliminar el personaje del Chapulin Colorado nuevamente para verificar que no existe
-      Given path '/api/characters', characterId
-      When method DELETE
-      Then status 404
+    # Eliminar el personaje del Captain America nuevamente para verificar que no existe
+    Given path '/api/characters', characterId
+    When method DELETE
+    Then status 404
 
-      
+  Scenario: Verificar que el personaje de Ant-Man no se crea por campos faltantes
+    # Creación del personaje de Ant-Man con datos faltantes
+    Given path '/api/characters'
+    And request {name : "Ant-Man", alterego: "Scott Lang"}
+    When method POST
+    Then status 400
